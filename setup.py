@@ -11,5 +11,5 @@ setup(
     packages=find_packages(),
     package_data={'imagecaptioner': ['fonts/*.ttf']},
     install_requires=['Pillow'],
-    entry_points={'console_scripts': ['icaptioner = imagecaptioner.main:main']}
+    entry_points={'console_scripts': ['icaptioner = imagecaptioner.cli:main']}
 )
