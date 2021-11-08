@@ -22,10 +22,11 @@ class ImageCaptioner:
                      size: str = None,
                      color: str = "blue",
                      bold: str = 1,
-                     singlethread: int = None):
+                     singlethread: int = None) -> bool:
         """
-        Script for adding captions to the images based on the metadata, filename or user input
+        Script for adding captions to the images based on the metadata, filename or user input.
 
+        :rtype: bool Return true or raise Exception
         :param path:File or directory location
         :param caption:Caption with variables support taken from metatags. To access variable in caption use e.g. ##DateTime, ##Make, ##Model
         :param dateformat:Date time format
@@ -75,11 +76,13 @@ class ImageCaptioner:
                                     image_paths]).get()
                 pool.close()
             logging.info("SUCCESS Captions added.")
+            return True
         else:
             output_filename = args['output'] or os.path.join(os.path.dirname(args['path']),
                                                              "captioned_" + os.path.basename(args['path']))
             ImageCaptioner.__draw_caption_on_image__(args, args['path'], output_filename)
             logging.info("SUCCESS Caption added.")
+            return True
 
     @staticmethod
     def __draw_caption_on_image__(args: {}, image_path: str, output_filename: str):
