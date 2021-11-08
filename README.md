@@ -7,21 +7,21 @@ Command line python script for adding captions to the images based on the metada
 ## Example
 
 Source Image:
-![](example/kitten.jpg)
+![](https://raw.githubusercontent.com/greencashew/image-captioner/main/example/kitten.jpg)
 
 ```console
 imagecaptioner kitten.jpg
 ```
 
 result:
-![](example/captioned_kitten.jpg)
+![](https://raw.githubusercontent.com/greencashew/image-captioner/main/example/captioned_kitten.jpg)
 
 ```console
 imagecaptioner kitten.jpg -c "LOVELY KITTEN, ##Software                      ##DateTime" --color=#e4eeed --size=30 --bold=2 -o "captioned2_kitten.jpg"
 ```
 
 result:
-![](example/captioned2_kitten.jpg)
+![](https://raw.githubusercontent.com/greencashew/image-captioner/main/example/captioned2_kitten.jpg)
 
 ## Installation
 
@@ -105,4 +105,6 @@ ImageCaptioner.add_captions(
 )
 ```
 
+## Licence
 
+MIT
