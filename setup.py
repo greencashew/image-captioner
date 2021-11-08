@@ -11,6 +11,7 @@ setup(
     license='MIT',
     description='Command line python script for adding captions to the images based on the metadata, filename or user input',
     long_description=long_description,
+    long_description_content_type='text/markdown',
 
     packages=find_packages(),
     package_data={'imagecaptioner': ['fonts/*.ttf']},
