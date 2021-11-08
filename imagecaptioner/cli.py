@@ -27,15 +27,15 @@ def create_parser():
                                      )
     parser.add_argument("path", type=str, help="File or directory location")
     parser.add_argument("-c", "--caption", type=str,
-                        help="Caption with variables support taken from metatags. To access in caption e.g. ##DateTime",
+                        help="Caption with variables support taken from metatags. To access variable in caption use e.g. ##DateTime",
                         default='##DateTime')
     parser.add_argument("-m", "--metatags", action="count", help="Show file metatags")
     parser.add_argument("-df", "--dateformat", type=str, help="Date time format", default="%Y/%m/%d, %H:%M")
     parser.add_argument("-o", "--output", type=str,
                         help="Output file or directory, by default adds 'captioned_' prefix")
-    parser.add_argument("-r", "--overwrite", action="count", help="Overwrite current photo with new one")
+    parser.add_argument("-r", "--overwrite", action="count", help="Overwrite already captioned photo with new one")
     parser.add_argument("-p", "--preview", action="count",
-                        help="Preview mode. Show only mode instead of writing. Useful for testing. Only for specific file.")
+                        help="Preview mode. Show only mode instead of save. Useful for testing. Only for specific file.")
     parser.add_argument("--font", type=str, help="Font type")
     parser.add_argument("--size", type=int, help="Font size, by default automatically chosen.")
     parser.add_argument("--color", type=str, help="Font color", default="blue")
@@ -59,4 +59,16 @@ def main():
     if args.metatags:
         Metags.get_metatags(args=args)
     else:
-        ImageCaptioner.add_captions(args=args)
+        ImageCaptioner.add_captions(
+            path=args.path,
+            caption=args.caption,
+            dateformat=args.dateformat,
+            output=args.output,
+            overwrite=args.overwrite,
+            preview=args.preview,
+            font=args.font,
+            size=args.size,
+            color=args.color,
+            bold=args.bold,
+            singlethread=args.singlethread,
+        )
