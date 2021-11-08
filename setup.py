@@ -5,7 +5,7 @@ with open("README.md", 'r') as f:
 
 setup(
     name='imagecaptioner',
-    version=0.1,
+    version=0.3,
     url="https://github.com/greencashew/image-captioner",
     author="Jan Górkiewicz (https://greencashew.dev/)",
     license='MIT',
