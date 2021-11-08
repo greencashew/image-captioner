@@ -4,8 +4,8 @@ with open("README.md", 'r') as f:
     long_description = f.read()
 
 setup(
-    name='icaptioner',
-    version=1.0,
+    name='imagecaptioner',
+    version=0.1,
     url="https://github.com/greencashew/image-captioner",
     author="Jan Górkiewicz (https://greencashew.dev/)",
     license='MIT',
@@ -16,5 +16,5 @@ setup(
     packages=find_packages(),
     package_data={'imagecaptioner': ['fonts/*.ttf']},
     install_requires=['Pillow', 'datefinder'],
-    entry_points={'console_scripts': ['icaptioner = imagecaptioner.cli:main']}
+    entry_points={'console_scripts': ['imagecaptioner = imagecaptioner.cli:main']}
 )

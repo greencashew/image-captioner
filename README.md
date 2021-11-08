@@ -1,6 +1,6 @@
-# ICaptioner - Image Captioner
+# Image Captioner
 
-[![PyPI - Implementation](https://img.shields.io/pypi/v/icaptioner)](https://pypi.org/project/icaptioner/)
+[![PyPI - Implementation](https://img.shields.io/pypi/v/imagecaptioner)](https://pypi.org/project/imagecaptioner/)
 
 Command line python script for adding captions to the images based on the metadata, filename or user input.
 
@@ -10,14 +10,14 @@ Source Image:
 ![](example/kitten.jpg)
 
 ```console
-icaptioner kitten.jpg
+imagecaptioner kitten.jpg
 ```
 
 result:
 ![](example/captioned_kitten.jpg)
 
 ```console
-icaptioner kitten.jpg -c "LOVELY KITTEN, ##Software                      ##DateTime" --color=#e4eeed --size=30 --bold=2 -o "captioned2_kitten.jpg"
+imagecaptioner kitten.jpg -c "LOVELY KITTEN, ##Software                      ##DateTime" --color=#e4eeed --size=30 --bold=2 -o "captioned2_kitten.jpg"
 ```
 
 result:
@@ -25,10 +25,10 @@ result:
 
 ## Installation
 
-It is required to install **icaptioner** dependency from pypi repository.
+It is required to install **imagecaptioner** dependency from pypi repository.
 
 ```console
-pip install icaptioner
+pip install imagecaptioner
 ```
 
 ## Usage
@@ -36,8 +36,8 @@ pip install icaptioner
 ### CLI
 
 ```console
-➜  ~/pictures icaptioner --help      
-usage: icaptioner path caption_expression [options]
+➜  ~/pictures imagecaptioner --help      
+usage: imagecaptioner path caption_expression [options]
 
 positional arguments:
   path                  File or directory location
@@ -61,20 +61,20 @@ optional arguments:
   -v, --verbose         Increase logging severity
 
 Examples:
-    > icaptioner 20190116_111115.jpg -c "Party, ##DateTime - Captured with phone ##Make ##Model"
-    > icaptioner images/ --output=captioned_images
-    > icaptioner 20190116_111115.jpg -p --font=fonts/Lato-Regular.ttf --size=120 --color=#030360 --bold=3
-    > icaptioner 20190116_111115.jpg -r -dateformat "%H:%M" --output=captioned.jpg
+    > imagecaptioner 20190116_111115.jpg -c "Party, ##DateTime - Captured with phone ##Make ##Model"
+    > imagecaptioner images/ --output=captioned_images
+    > imagecaptioner 20190116_111115.jpg -p --font=fonts/Lato-Regular.ttf --size=120 --color=#030360 --bold=3
+    > imagecaptioner 20190116_111115.jpg -r -dateformat "%H:%M" --output=captioned.jpg
 
     Show metatags:
-    > icaptioner 20190116_111115.jpg -m
-    > icaptioner images/ -m
+    > imagecaptioner 20190116_111115.jpg -m
+    > imagecaptioner images/ -m
 
 ```
 
 ### Python library
 
-It is possible to import **icaptioner** lib to your python project
+It is possible to import **imagecaptioner** lib to your python project
 
 Import library:
 

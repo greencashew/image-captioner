@@ -15,14 +15,14 @@ def create_parser():
                                      exit_on_error=True,
                                      formatter_class=argparse.RawDescriptionHelpFormatter,
                                      epilog=textwrap.dedent("""Examples:
-    > icaptioner 20190116_111115.jpg -c "Party, ##DateTime - Captured with phone ##Make ##Model"
-    > icaptioner images/ --output=captioned_images
-    > icaptioner 20190116_111115.jpg -p --font=fonts/Lato-Regular.ttf --size=120 --color=#030360 --bold=3
-    > icaptioner 20190116_111115.jpg -r -dateformat "%H:%M" --output=captioned.jpg
+    > imagecaptioner 20190116_111115.jpg -c "Party, ##DateTime - Captured with phone ##Make ##Model"
+    > imagecaptioner images/ --output=captioned_images
+    > imagecaptioner 20190116_111115.jpg -p --font=fonts/Lato-Regular.ttf --size=120 --color=#030360 --bold=3
+    > imagecaptioner 20190116_111115.jpg -r -dateformat "%H:%M" --output=captioned.jpg
     
     Show metatags:
-    > icaptioner 20190116_111115.jpg -m
-    > icaptioner images/ -m
+    > imagecaptioner 20190116_111115.jpg -m
+    > imagecaptioner images/ -m
                                      """)
                                      )
     parser.add_argument("path", type=str, help="File or directory location")
