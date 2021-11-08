@@ -4,6 +4,7 @@ import os
 from datetime import datetime
 from string import Template
 
+import datefinder
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 from imagecaptioner.utils import Utils
@@ -26,7 +27,7 @@ class ImageCaptioner:
             if len(image_paths) == 0:
                 raise ValueError(f"Unable to find any image under directory: {args.path}")
 
-            output = args.output or "captioned"
+            output = args.output or os.path.dirname(args.path) + "_captioned"
             if os.path.exists(output):
                 if not args.overwrite:
                     raise FileExistsError(f"Directory '{output}' already exists. To overwrite use --overwrite flag.")
@@ -62,16 +63,7 @@ class ImageCaptioner:
         if not args.font:
             args.font = os.path.join(os.path.dirname(__file__), "fonts/Lato-Regular.ttf")
 
-        try:
-            tag_dict['DateTime'] = datetime.strptime(tag_dict['DateTime'], "%Y:%m:%d %H:%M:%S").strftime(
-                args.dateformat)
-            logging.debug(f"Update DateTime metatag: {tag_dict['DateTime']}")
-        except ValueError as err:
-            tag_dict['DateTime'] = ""
-            logging.warning(f"Unable to parse DateTime {err} for file {image_path}. Filled with empty string.")
-        except KeyError as err:
-            tag_dict['DateTime'] = ""
-            logging.warning(f"{err} variable is missing for file {image_path}. Filled with empty string.")
+        tag_dict['DateTime'] = ImageCaptioner.extract_datetime_from_tag_or_path(tag_dict, image_path, args.dateformat)
 
         try:
             caption = MyTemplate(args.caption).safe_substitute(tag_dict)
@@ -87,9 +79,27 @@ class ImageCaptioner:
                 f"Missed variable {e} given in caption for {args.path}. List of available variables: {tag_dict}")
 
     @staticmethod
+    def extract_datetime_from_tag_or_path(tag_dict: {}, image_path: str, date_format):
+        try:
+            logging.debug(f"Update DateTime metatag: {tag_dict['DateTime']}")
+            return datetime.strptime(tag_dict['DateTime'], "%Y:%m:%d %H:%M:%S").strftime(date_format)
+        except (ValueError, KeyError) as err:
+            try:
+                matches = list(datefinder.find_dates(os.path.basename(image_path)))
+                if len(matches) > 0 and matches[0] > datetime(1900, 1, 1, 00, 00, 00):
+                    logging.warning(f"{err} variable is missing for file {image_path}. Extracting from filename.")
+                    return matches[0].strftime(date_format)
+                else:
+                    logging.warning(f"Unable to parse DateTime for file {image_path}. Filled with empty string. {err}")
+                    return ""
+            except Exception as err:
+                logging.warning(
+                    f"Unable to extract DateTime from path for file {image_path}. Filled with empty string. {err}")
+                return ""
+
+    @staticmethod
     def draw_image(image: Image, output_filename, caption, font_type, font_color, font_size, stroke_width,
-                   preview,
-                   overwrite):
+                   preview, overwrite):
         if not overwrite and os.path.exists(output_filename):
             raise FileExistsError(f"File {output_filename} already exists. To overwrite use --overwrite flag.")
 
@@ -104,8 +114,7 @@ class ImageCaptioner:
         font = ImageFont.truetype(font_type, calculated_font_size)
 
         draw.text(xy=(width / 15 + 25, height - (80 + calculated_font_size)), text=caption, fill=font_color, font=font,
-                  align="left",
-                  stroke_width=stroke_width)
+                  align="left", stroke_width=stroke_width)
 
         if preview:
             image.show()

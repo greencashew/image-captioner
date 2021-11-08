@@ -1,1 +1,2 @@
-Pillow
+Pillow~=8.4.0
+datefinder~=0.7.1
