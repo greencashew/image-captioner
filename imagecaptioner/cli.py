@@ -40,6 +40,9 @@ def create_parser():
     parser.add_argument("--size", type=int, help="Font size, by default automatically chosen.")
     parser.add_argument("--color", type=str, help="Font color", default="blue")
     parser.add_argument("--bold", type=int, help="Font bold", default=1)
+    parser.add_argument("--align", type=str,
+                        help="Text alignment. Possible values: BOTTOM_LEFT, BOTTOM_RIGHT, TOP_LEFT, TOP_RIGHT, CENTER. It can be used also with shorter versions like: bl, br, tl, tr, c",
+                        default="BOTTOM_LEFT")
     parser.add_argument("--singlethread", action="count", help="Use single thread (only works for directory)")
     parser.add_argument('-v', '--verbose', help="Increase logging severity", action="store_const", dest="loglevel",
                         const=logging.INFO)
@@ -70,5 +73,6 @@ def main():
             size=args.size,
             color=args.color,
             bold=args.bold,
+            align=args.align,
             singlethread=args.singlethread,
         )

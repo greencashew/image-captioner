@@ -10,7 +10,7 @@ Source Image:
 ![](https://raw.githubusercontent.com/greencashew/image-captioner/main/example/kitten.jpg)
 
 ```console
-imagecaptioner kitten.jpg
+imagecaptioner kitten.jpg --align=tr
 ```
 
 result:
@@ -57,6 +57,8 @@ optional arguments:
   --size SIZE           Font size, by default automatically chosen.
   --color COLOR         Font color
   --bold BOLD           Font bold
+  --align ALIGN         Text alignment. Possible values: BOTTOM_LEFT, BOTTOM_RIGHT, TOP_LEFT, TOP_RIGHT, CENTER. 
+  It can be used also with shorter versions like: bl, br, tl, tr, c
   --singlethread        Use single thread (only works for directory)
   -v, --verbose         Increase logging severity
 
@@ -69,7 +71,7 @@ Examples:
     Show metatags:
     > imagecaptioner 20190116_111115.jpg -m
     > imagecaptioner images/ -m
-
+    
 ```
 
 ### Python library

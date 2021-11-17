@@ -22,13 +22,16 @@ class ImageCaptioner:
                      size: str = None,
                      color: str = "blue",
                      bold: str = 1,
-                     singlethread: int = None) -> bool:
+                     align: str = "BOTTOM_LEFT",
+                     singlethread: int = None,
+                     ) -> bool:
         """
         Script for adding captions to the images based on the metadata, filename or user input.
 
         :rtype: bool Return true or raise Exception
         :param path:File or directory location
-        :param caption:Caption with variables support taken from metatags. To access variable in caption use e.g. ##DateTime, ##Make, ##Model
+        :param caption:Caption with variables support taken from metatags. To access variable in caption use
+        e.g. ##DateTime, ##Make, ##Model
         :param dateformat:Date time format
         :param output:Output file or directory, by default adds 'captioned_' prefix to file and '_captioned' suffix for file.
         :param overwrite:Overwrite already captioned photo with new one
@@ -37,10 +40,12 @@ class ImageCaptioner:
         :param size:Font size, by default automatically chosen.
         :param color:Font color
         :param bold:Font bold
+        :param align: Text alignment. Possible values: BOTTOM_LEFT, BOTTOM_RIGHT, TOP_LEFT, TOP_RIGHT, CENTER.
+        It can be used also with shorter versions like: bl, br, tl, tr, c
         :param singlethread:Use single thread (only works for directory)
         """
         args = {'path': path, 'caption': caption, 'dateformat': dateformat, 'output': output, 'overwrite': overwrite,
-                'preview': preview, 'font': font, 'size': size, 'color': color, 'bold': bold,
+                'preview': preview, 'font': font, 'size': size, 'color': color, 'bold': bold, 'align': align,
                 'singlethread': singlethread}
 
         logging.debug(f"Input arguments: {args}")
@@ -103,6 +108,7 @@ class ImageCaptioner:
             ImageCaptioner.__draw_image__(image=image, output_filename=output_filename, caption=caption,
                                           font_type=args['font'],
                                           font_color=args['color'], font_size=args['size'], stroke_width=args['bold'],
+                                          align=args['align'],
                                           preview=args['preview'],
                                           overwrite=args['overwrite'])
 
@@ -131,13 +137,11 @@ class ImageCaptioner:
                 return ""
 
     @staticmethod
-    def __draw_image__(image: Image, output_filename, caption, font_type, font_color, font_size, stroke_width,
+    def __draw_image__(image: Image, output_filename, caption, font_type, font_color, font_size, stroke_width, align,
                        preview, overwrite):
         if not overwrite and os.path.exists(output_filename):
             raise FileExistsError(f"File {output_filename} already exists. To overwrite use --overwrite flag.")
 
-        draw = ImageDraw.Draw(image)
-        width, height = image.size
         try:
             calculated_font_size = font_size or ImageCaptioner.__find_font_size__(caption, font_type, image)
         except ZeroDivisionError as error:
@@ -146,8 +150,13 @@ class ImageCaptioner:
 
         font = ImageFont.truetype(font_type, calculated_font_size)
 
-        draw.text(xy=(width / 15 + 25, height - (80 + calculated_font_size)), text=caption, fill=font_color, font=font,
-                  align="left", stroke_width=stroke_width)
+        draw = ImageDraw.Draw(image)
+        text_width, text_height = draw.textsize(caption, font=font)
+        text_position = ImageCaptioner.__calculate_alignment__(image.width, image.height, text_width, text_height,
+                                                               align)
+
+        draw.text(xy=text_position, text=caption, fill=font_color, font=font,
+                  stroke_width=stroke_width)
 
         if preview:
             image.show()
@@ -170,6 +179,46 @@ class ImageCaptioner:
         estimated_font_size = tested_font_size / (observed_width / image.width) * target_width_ratio
 
         return round(estimated_font_size)
+
+    @staticmethod
+    def __calculate_alignment__(image_width, image_height, text_width, text_height, align):
+        width_padding = image_width / 20
+        height_padding = image_height / 20
+
+        bottom_left = (width_padding, image_height - (height_padding + text_height))
+        bottom_right = (image_width - (width_padding + text_width), image_height - (height_padding + text_height))
+        top_left = (width_padding, height_padding)
+        top_right = (image_width - (width_padding + text_width), height_padding)
+        center = ((image_width - text_width) / 2, (image_height - text_height) / 2)
+
+        switch = {
+            'BOTTOM_LEFT': bottom_left,
+            'BOTTOM_RIGHT': bottom_right,
+            'TOP_LEFT': top_left,
+            'TOP_RIGHT': top_right,
+            'CENTER': center,
+
+            # Without underscore
+            'BOTTOMLEFT': bottom_left,
+            'BOTTOMRIGHT': bottom_right,
+            'TOPLEFT': top_left,
+            'TOPRIGHT': top_right,
+
+            # Only first letter cases
+            'BL': bottom_left,
+            'BR': bottom_right,
+            'TL': top_left,
+            'TR': top_right,
+            'C': center,
+
+            # Only first letter cases with underscores
+            'B_L': bottom_left,
+            'B_R': bottom_right,
+            'T_L': top_left,
+            'T_R': top_right,
+        }
+
+        return switch.get(align.upper())
 
 
 class DoubleHashTemplate(Template):
